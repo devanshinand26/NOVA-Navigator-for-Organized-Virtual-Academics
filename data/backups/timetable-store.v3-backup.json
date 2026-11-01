@@ -1,0 +1,29 @@
+{
+  "backupDate": "2026-10-28T09:35:10.000Z",
+  "comment": "Pre-update backup before transitioning to Timetable Generator with dynamic sections, full theoretical subjects, 4-period Tech Training, and 4 two-period Labs",
+  "version": "3.0",
+  "lastUpdated": "2026-10-28T16:02:30.059Z",
+  "academicYear": "2025–2026",
+  "sections": [
+    "CSE 2A",
+    "CSE 2B"
+  ],
+  "periods": [
+    { "id": 1, "label": "Period 1", "time": "09:10 AM – 10:00 AM", "minutes": 50, "half": "morning" },
+    { "id": 2, "label": "Period 2", "time": "10:01 AM – 10:50 AM", "minutes": 49, "half": "morning" },
+    { "id": 3, "label": "Period 3", "time": "10:51 AM – 11:40 AM", "minutes": 49, "half": "morning" },
+    { "id": 4, "label": "Period 4", "time": "11:41 AM – 12:30 PM", "minutes": 49, "half": "morning" },
+    { "id": 5, "label": "Period 5", "time": "01:11 PM – 02:00 PM", "minutes": 49, "half": "afternoon" },
+    { "id": 6, "label": "Period 6", "time": "02:01 PM – 02:50 PM", "minutes": 49, "half": "afternoon" },
+    { "id": 7, "label": "Period 7", "time": "02:51 PM – 03:40 PM", "minutes": 49, "half": "afternoon" },
+    { "id": 8, "label": "Period 8", "time": "03:41 PM – 04:30 PM", "minutes": 49, "half": "afternoon" }
+  ],
+  "lunchBreak": {
+    "label": "Lunch Break",
+    "time": "12:31 PM – 01:10 PM",
+    "minutes": 39,
+    "between": [4, 5]
+  },
+  "classes": [],
+  "previousSchedule": []
+}

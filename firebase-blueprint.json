@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Student academic profile and study state",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "name": { "type": "string", "maxLength": 150 },
+        "course": { "type": "string", "maxLength": 50 },
+        "program": { "type": "string", "maxLength": 50 },
+        "university": { "type": "string", "maxLength": 200 },
+        "branch": { "type": "string", "maxLength": 150 },
+        "year": { "type": "string", "maxLength": 30 },
+        "semester": { "type": "string", "maxLength": 30 },
+        "subjects": { "type": "array" },
+        "studyPreferences": { "type": "object" },
+        "activeStudyDates": { "type": "array" },
+        "streak": { "type": "number" },
+        "longestStreak": { "type": "number" },
+        "overallProgress": { "type": "number" },
+        "completedTasksCount": { "type": "number" },
+        "totalTasksCount": { "type": "number" },
+        "totalCompletedActivities": { "type": "number" },
+        "goalsDone": { "type": "number" },
+        "goalsTotal": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "name"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Private user profiles indexed strictly by authenticated user UID"
+    }
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-10-15T17:29:17.967Z",
+  "schedules": [],
+  "attempts": [
+    {
+      "id": "attempt_1792087635544_2qo9s",
+      "testId": "test_ds_unit1",
+      "title": "Unit 1 Mastery Test",
+      "subject": "Data Structures",
+      "subjectCode": "BCS-301",
+      "userEmail": "student@aktu.ac.in",
+      "completedAt": "2026-10-15T18:07:15.544Z",
+      "totalMarks": 2,
+      "obtainedMarks": 0,
+      "percentage": 0,
+      "unitPerformance": {
+        "Unit 1": {
+          "total": 2,
+          "obtained": 0,
+          "count": 1
+        }
+      },
+      "weakUnits": [
+        {
+          "unit": "Unit 1",
+          "percentage": 0
+        }
+      ],
+      "strongUnits": [],
+      "evaluationDetails": [
+        {
+          "questionId": "q1",
+          "question": "Test Q",
+          "unit": 1,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 0,
+          "isCorrect": false,
+          "studentAnswer": "",
+          "correctAnswer": "A",
+          "feedback": "Incorrect. Correct answer was option A: A"
+        }
+      ]
+    },
+    {
+      "id": "attempt_1792087745473_6v60o",
+      "testId": "test_ds_unit1",
+      "title": "Unit 1 Mastery Test",
+      "subject": "Data Structures",
+      "subjectCode": "BCS-301",
+      "userEmail": "student@aktu.ac.in",
+      "completedAt": "2026-10-15T18:09:05.473Z",
+      "totalMarks": 2,
+      "obtainedMarks": 0,
+      "percentage": 0,
+      "unitPerformance": {
+        "Unit 1": {
+          "total": 2,
+          "obtained": 0,
+          "count": 1
+        }
+      },
+      "weakUnits": [
+        {
+          "unit": "Unit 1",
+          "percentage": 0
+        }
+      ],
+      "strongUnits": [],
+      "evaluationDetails": [
+        {
+          "questionId": "q1",
+          "question": "Test Q",
+          "unit": 1,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 0,
+          "isCorrect": false,
+          "studentAnswer": "",
+          "correctAnswer": "Option A",
+          "feedback": "Incorrect. Correct answer was option A: Option A"
+        }
+      ]
+    },
+    {
+      "id": "attempt_1792087757768_le35v",
+      "testId": "test_ds_unit1",
+      "title": "Unit 1 Mastery Test",
+      "subject": "Data Structures",
+      "subjectCode": "BCS-301",
+      "userEmail": "student@aktu.ac.in",
+      "completedAt": "2026-10-15T18:09:17.768Z",
+      "totalMarks": 2,
+      "obtainedMarks": 2,
+      "percentage": 100,
+      "correctCount": 1,
+      "incorrectCount": 0,
+      "unansweredCount": 0,
+      "unitPerformance": {
+        "Unit 1": {
+          "total": 2,
+          "obtained": 2,
+          "count": 1,
+          "title": "Unit 1"
+        }
+      },
+      "weakUnits": [],
+      "strongUnits": [
+        {
+          "unit": "Unit 1",
+          "title": "Unit 1",
+          "percentage": 100
+        }
+      ],
+      "evaluationDetails": [
+        {
+          "questionId": "q1",
+          "question": "Test Q",
+          "unit": 1,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 2,
+          "isCorrect": true,
+          "isAttempted": true,
+          "studentAnswer": "A. Option A",
+          "correctAnswer": "A. Option A",
+          "explanation": "Correct selection!",
+          "feedback": "Correct selection!"
+        }
+      ]
+    },
+    {
+      "id": "attempt_1792087762836_sdkog",
+      "testId": "test_ds_unit1",
+      "title": "Unit 1 Mastery Test",
+      "subject": "Data Structures",
+      "subjectCode": "BCS-301",
+      "userEmail": "student@aktu.ac.in",
+      "completedAt": "2026-10-15T18:09:22.836Z",
+      "totalMarks": 2,
+      "obtainedMarks": 0,
+      "percentage": 0,
+      "correctCount": 0,
+      "incorrectCount": 0,
+      "unansweredCount": 1,
+      "unitPerformance": {
+        "Unit 1": {
+          "total": 2,
+          "obtained": 0,
+          "count": 1,
+          "title": "Unit 1"
+        }
+      },
+      "weakUnits": [
+        {
+          "unit": "Unit 1",
+          "title": "Unit 1",
+          "percentage": 0
+        }
+      ],
+      "strongUnits": [],
+      "evaluationDetails": [
+        {
+          "questionId": "q1",
+          "question": "Test Q",
+          "unit": 1,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 0,
+          "isCorrect": false,
+          "isAttempted": false,
+          "studentAnswer": "Not Attempted",
+          "correctAnswer": "A. Option A",
+          "explanation": "Not attempted. Correct answer was Option A: Option A",
+          "feedback": "Not attempted. Correct answer was Option A: Option A"
+        }
+      ]
+    },
+    {
+      "id": "attempt_1792088351001_wog77",
+      "testId": "test_ds_full_mock",
+      "title": "AKTU Full-Syllabus End Semester Mock Examination",
+      "subject": "Data Structures",
+      "subjectCode": "BCS-301",
+      "userEmail": "student@aktu.ac.in",
+      "completedAt": "2026-10-15T18:19:11.001Z",
+      "totalMarks": 6,
+      "obtainedMarks": 2,
+      "percentage": 33.3,
+      "correctCount": 1,
+      "incorrectCount": 1,
+      "unansweredCount": 1,
+      "unitPerformance": {
+        "Unit 1": {
+          "total": 2,
+          "obtained": 2,
+          "count": 1,
+          "title": "Unit 1"
+        },
+        "Unit 2": {
+          "total": 2,
+          "obtained": 0,
+          "count": 1,
+          "title": "Unit 2"
+        },
+        "Unit 3": {
+          "total": 2,
+          "obtained": 0,
+          "count": 1,
+          "title": "Unit 3"
+        }
+      },
+      "weakUnits": [
+        {
+          "unit": "Unit 2",
+          "title": "Unit 2",
+          "percentage": 0
+        },
+        {
+          "unit": "Unit 3",
+          "title": "Unit 3",
+          "percentage": 0
+        }
+      ],
+      "strongUnits": [
+        {
+          "unit": "Unit 1",
+          "title": "Unit 1",
+          "percentage": 100
+        }
+      ],
+      "evaluationDetails": [
+        {
+          "questionId": "full_q1",
+          "question": "What is the recurrence relation for Merge Sort?",
+          "unit": 1,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 2,
+          "isCorrect": true,
+          "isAttempted": true,
+          "studentAnswer": "A. T(n) = 2T(n/2) + O(n)",
+          "correctAnswer": "A. T(n) = 2T(n/2) + O(n)",
+          "explanation": "Correct selection!",
+          "feedback": "Correct selection!"
+        },
+        {
+          "questionId": "full_q2",
+          "question": "Which notation is evaluated directly left to right?",
+          "unit": 2,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 0,
+          "isCorrect": false,
+          "isAttempted": true,
+          "studentAnswer": "A. Infix",
+          "correctAnswer": "B. Postfix (Reverse Polish)",
+          "explanation": "Incorrect. Correct answer was Option B: Postfix (Reverse Polish)",
+          "feedback": "Incorrect. Correct answer was Option B: Postfix (Reverse Polish)"
+        },
+        {
+          "questionId": "full_q3",
+          "question": "Which linked list allows bidirectional traversal?",
+          "unit": 3,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 0,
+          "isCorrect": false,
+          "isAttempted": false,
+          "studentAnswer": "Not Attempted",
+          "correctAnswer": "B. Doubly",
+          "explanation": "Not attempted. Correct answer was Option B: Doubly",
+          "feedback": "Not attempted. Correct answer was Option B: Doubly"
+        }
+      ]
+    },
+    {
+      "id": "attempt_1792681318335_22mez",
+      "testId": "test_eval_1",
+      "title": "Unit 1 Test",
+      "subject": "Data Structures",
+      "subjectCode": "BCS-301",
+      "userEmail": "devanshinand8@gmail.com",
+      "completedAt": "2026-10-22T15:02:02.875Z",
+      "totalMarks": 2,
+      "obtainedMarks": 2,
+      "percentage": 100,
+      "correctCount": 1,
+      "incorrectCount": 0,
+      "unansweredCount": 0,
+      "unitPerformance": {
+        "Unit 1": {
+          "total": 2,
+          "obtained": 2,
+          "count": 1,
+          "title": "Unit 1"
+        }
+      },
+      "weakUnits": [],
+      "strongUnits": [
+        {
+          "unit": "Unit 1",
+          "title": "Unit 1",
+          "percentage": 100
+        }
+      ],
+      "evaluationDetails": [
+        {
+          "questionId": "q1",
+          "unit": 1,
+          "type": "mcq",
+          "maxMarks": 2,
+          "awardedMarks": 2,
+          "isCorrect": true,
+          "isAttempted": true,
+          "studentAnswer": "A. A",
+          "correctAnswer": "A. A",
+          "explanation": "Correct selection!",
+          "feedback": "Correct selection!"
+        }
+      ]
+    }
+  ],
+  "bookmarks": [],
+  "customQuestions": []
+}

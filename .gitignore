@@ -1,0 +1,4 @@
+.env
+node_modules
+data/user-store.json
+data/chat-store.json

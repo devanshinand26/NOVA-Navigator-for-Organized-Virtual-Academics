@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nova — AI Study Assistant & Automated Timetable Generator</title>
+<meta name="description" content="Nova AI Study Assistant with Automated &amp; Optimized College Timetable Generator, AKTU syllabus, flashcards, Pomodoro focus hub, and study planner." />
+<meta property="og:title" content="Nova — AI Study Assistant & Automated Timetable Generator" />
+<meta property="og:description" content="Nova AI Study Assistant with Automated &amp; Optimized College Timetable Generator, AKTU syllabus, flashcards, Pomodoro focus hub, and study planner." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="timetable.css" />
+<link rel="stylesheet" href="tests-planner.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     AUTH LOADING / SESSION RESTORATION SCREEN
+============================================================= -->
+<div id="authLoadingScreen" class="screen auth-loading-screen" role="status" aria-live="polite">
+  <div class="login-bg-glow"></div>
+  <div class="auth-loading-content">
+    <div class="auth-loading-spinner" aria-hidden="true"></div>
+    <div class="auth-loading-brand">
+      <span class="auth-loading-title">Nova</span>
+      <span class="auth-loading-subtitle">Restoring your study session…</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LOGIN / SIGNUP SCREEN
+============================================================= -->
+<div id="loginScreen" class="screen login-screen hidden">
+  <div class="login-bg-glow"></div>
+
+  <header class="login-header">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="logoGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4C7CFF"/>
+            <stop offset="100%" stop-color="#FF8A3D"/>
+          </linearGradient>
+        </defs>
+        <path d="M24 4L42 14V34L24 44L6 34V14L24 4Z" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="24" cy="24" r="5" fill="url(#logoGrad)"/>
+        <circle cx="24" cy="10" r="3" fill="url(#logoGrad)"/>
+        <circle cx="38" cy="18" r="3" fill="url(#logoGrad)"/>
+        <circle cx="38" cy="30" r="3" fill="url(#logoGrad)"/>
+        <circle cx="24" cy="38" r="3" fill="url(#logoGrad)"/>
+        <circle cx="10" cy="30" r="3" fill="url(#logoGrad)"/>
+        <circle cx="10" cy="18" r="3" fill="url(#logoGrad)"/>
+        <line x1="24" y1="24" x2="24" y2="10" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <line x1="24" y1="24" x2="38" y2="18" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <line x1="24" y1="24" x2="38" y2="30" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <line x1="24" y1="24" x2="24" y2="38" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <line x1="24" y1="24" x2="10" y2="30" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <line x1="24" y1="24" x2="10" y2="18" stroke="url(#logoGrad)" stroke-width="1.5"/>
+      </svg>
+      <span class="brand-name">Study Assistant</span>
+    </div>
+  </header>
+
+  <main class="login-main">
+    <div class="login-card">
+
+      <!-- Role Selection Toggle (Student vs Staff) -->
+      <div class="auth-role-toggle" id="authRoleToggle" role="tablist" aria-label="Choose user role">
+        <button type="button" class="role-toggle-btn active" id="roleBtnStudent" data-role="student" role="tab" aria-selected="true">
+          <svg class="role-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 14l9-5-9-5-9 5 9 5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Student</span>
+        </button>
+        <button type="button" class="role-toggle-btn" id="roleBtnStaff" data-role="staff" role="tab" aria-selected="false">
+          <svg class="role-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M22 21v-2a4 4 0 00-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Staff / Faculty</span>
+        </button>
+      </div>
+
+      <!-- Student Form Tabs -->
+      <div class="auth-tabs" id="studentAuthTabs">
+        <button type="button" class="tab-btn active" id="showLoginTab">Log In</button>
+        <button type="button" class="tab-btn" id="showSignupTab">Sign Up</button>
+      </div>
+
+      <!-- Staff Form Tabs -->
+      <div class="auth-tabs hidden" id="staffAuthTabs">
+        <button type="button" class="tab-btn active" id="showStaffLoginTab">Staff Log In</button>
+        <button type="button" class="tab-btn" id="showStaffSignupTab">Register with Passkey</button>
+      </div>
+
+      <!-- ---------- LOGIN FORM ---------- -->
+      <form id="loginForm" class="auth-form" novalidate>
+        <h1 class="login-title">Welcome back</h1>
+        <p class="login-subtitle">Sign in to continue your study session.</p>
+
+        <div class="field">
+          <label for="email">Student Email ID</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6.5L12 13L21 6.5M4.5 5H19.5C20.3284 5 21 5.67157 21 6.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5C3 5.67157 3.67157 5 4.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="email" id="email" name="email" placeholder="you@school.edu" autocomplete="email" required />
+          </div>
+          <span class="field-error" id="emailError"></span>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5C8 5.01472 10.0147 3 12.5 3C14.9853 3 17 5.01472 17 7.5V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required />
+            <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="passwordError"></span>
+        </div>
+
+        <div class="field-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="rememberMe" checked />
+            <span class="checkbox-box"></span>
+            Remember me
+          </label>
+          <a href="#" class="link-muted" id="forgotPasswordLink">Forgot password?</a>
+        </div>
+
+        <span class="field-error form-error" id="loginFormError"></span>
+        <div class="field-success form-success hidden" id="loginFormSuccess"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+          <span class="btn-label">Log In</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+
+        <p class="login-hint">Naya account? Upar "Sign Up" tab par click karein.</p>
+      </form>
+
+      <!-- ---------- SIGNUP FORM ---------- -->
+      <form id="signupForm" class="auth-form hidden" novalidate>
+        <h1 class="login-title">Create account</h1>
+        <p class="login-subtitle">Sign up to start tracking your study progress.</p>
+
+        <div class="field">
+          <label for="signupName">Full Name</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.5 8 14 12 14C16 14 19 16.5 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="text" id="signupName" name="name" placeholder="Your full name" autocomplete="name" required />
+          </div>
+          <span class="field-error" id="signupNameError"></span>
+        </div>
+
+        <div class="field">
+          <label for="signupEmail">Student Email ID</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6.5L12 13L21 6.5M4.5 5H19.5C20.3284 5 21 5.67157 21 6.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5C3 5.67157 3.67157 5 4.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="email" id="signupEmail" name="email" placeholder="you@school.edu" autocomplete="email" required />
+          </div>
+          <span class="field-error" id="signupEmailError"></span>
+        </div>
+
+        <div class="field">
+          <label for="signupCourse">Course</label>
+          <div class="input-wrap">
+            <select id="signupCourse" name="course" class="select-input"></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="signupPassword">Password</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5C8 5.01472 10.0147 3 12.5 3C14.9853 3 17 5.01472 17 7.5V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="password" id="signupPassword" name="password" placeholder="Create a password (min 8 chars)" autocomplete="new-password" required />
+            <button type="button" class="toggle-pw" id="toggleSignupPw" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="signupPasswordError"></span>
+        </div>
+
+        <span class="field-error form-error" id="signupFormError"></span>
+        <div class="field-success form-success hidden" id="signupFormSuccess"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="signupBtn">
+          <span class="btn-label">Create Account</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <!-- ---------- STAFF LOGIN FORM ---------- -->
+      <form id="staffLoginForm" class="auth-form hidden" novalidate>
+        <h1 class="login-title">Staff Portal</h1>
+        <p class="login-subtitle">Sign in with faculty or admin credentials to manage timetables and classes.</p>
+
+        <div class="field">
+          <label for="staffEmail">Faculty / Staff Email ID</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6.5L12 13L21 6.5M4.5 5H19.5C20.3284 5 21 5.67157 21 6.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5C3 5.67157 3.67157 5 4.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="email" id="staffEmail" name="staffEmail" placeholder="admin@aktu.ac.in or faculty@nova.edu" autocomplete="email" required />
+          </div>
+          <span class="field-error" id="staffEmailError"></span>
+        </div>
+
+        <div class="field">
+          <label for="staffPassword">Password</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5C8 5.01472 10.0147 3 12.5 3C14.9853 3 17 7.5V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="password" id="staffPassword" name="staffPassword" placeholder="Enter staff password" autocomplete="current-password" required />
+            <button type="button" class="toggle-pw" id="toggleStaffPw" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="staffPasswordError"></span>
+        </div>
+
+        <div class="field-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="staffRememberMe" checked />
+            <span class="checkbox-box"></span>
+            Remember faculty session
+          </label>
+          <a href="#" class="link-muted" id="staffForgotPasswordLink">Need help?</a>
+        </div>
+
+        <span class="field-error form-error" id="staffLoginFormError"></span>
+        <div class="field-success form-success hidden" id="staffLoginFormSuccess"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="staffLoginBtn">
+          <span class="btn-label">Sign In as Staff</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+
+      </form>
+
+      <!-- ---------- STAFF REGISTRATION FORM ---------- -->
+      <form id="staffRegisterForm" class="auth-form hidden" novalidate>
+        <h1 class="login-title">Register Staff Account</h1>
+        <p class="login-subtitle">Requires university administrator authorization passkey.</p>
+
+        <div class="field">
+          <label for="staffRegName">Faculty / Staff Full Name</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.5 8 14 12 14C16 14 19 16.5 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="text" id="staffRegName" name="staffRegName" placeholder="Dr. / Prof. Full Name" required />
+          </div>
+          <span class="field-error" id="staffRegNameError"></span>
+        </div>
+
+        <div class="field">
+          <label for="staffRegEmail">Institutional Staff Email</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6.5L12 13L21 6.5M4.5 5H19.5C20.3284 5 21 5.67157 21 6.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5C3 5.67157 3.67157 5 4.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="email" id="staffRegEmail" name="staffRegEmail" placeholder="faculty@nova.edu or staff@aktu.ac.in" required />
+          </div>
+          <span class="field-error" id="staffRegEmailError"></span>
+        </div>
+
+        <div class="field">
+          <label for="staffRegDept">Department</label>
+          <div class="input-wrap">
+            <select id="staffRegDept" name="staffRegDept" class="select-input">
+              <option value="Computer Science & Engineering">Computer Science &amp; Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Applied Sciences & Humanities">Applied Sciences &amp; Humanities</option>
+              <option value="Dean Academics & Scheduling">Dean Academics &amp; Scheduling</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="staffRegDesignation">Designation</label>
+          <div class="input-wrap">
+            <select id="staffRegDesignation" name="staffRegDesignation" class="select-input">
+              <option value="Professor">Professor</option>
+              <option value="Associate Professor" selected>Associate Professor</option>
+              <option value="Assistant Professor">Assistant Professor</option>
+              <option value="Academic Coordinator">Academic Coordinator</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="staffRegPassword">Create Password</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5C8 5.01472 10.0147 3 12.5 3C14.9853 3 17 7.5V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="password" id="staffRegPassword" name="staffRegPassword" placeholder="Min 8 characters" required />
+            <button type="button" class="toggle-pw" id="toggleStaffRegPw" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="staffRegPasswordError"></span>
+        </div>
+
+        <div class="field">
+          <label for="staffRegAdminKey">Administrator Passkey <span style="color:var(--danger)">*</span></label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 7a2 2 0 0 1 2 2m4 0a6 6 0 0 1-7.743 5.743L11 17H9v2H7v2H4a1 1 0 0 1-1-1v-2.586a1 1 0 0 1 .293-.707l5.964-5.964A6 6 0 1 1 21 9z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="password" id="staffRegAdminKey" name="staffRegAdminKey" placeholder="Enter Admin Passkey (e.g. staff123)" required />
+            <button type="button" class="toggle-pw" id="toggleStaffAdminKeyPw" aria-label="Show passkey">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="staffRegAdminKeyError"></span>
+        </div>
+
+        <span class="field-error form-error" id="staffRegisterFormError"></span>
+        <div class="field-success form-success hidden" id="staffRegisterFormSuccess"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="staffRegisterBtn">
+          <span class="btn-label">Verify Passkey &amp; Register Staff</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================
+     DASHBOARD SCREEN
+============================================================= -->
+<div id="dashboardScreen" class="screen dashboard-screen hidden">
+
+  <div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="brand sidebar-brand">
+          <svg class="brand-logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="logoGrad2" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4C7CFF"/>
+                <stop offset="100%" stop-color="#FF8A3D"/>
+              </linearGradient>
+            </defs>
+            <path d="M24 4L42 14V34L24 44L6 34V14L24 4Z" stroke="url(#logoGrad2)" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="24" cy="24" r="5" fill="url(#logoGrad2)"/>
+          </svg>
+          <span class="brand-name">Nova</span>
+          <button id="closeSidebarBtn" class="icon-btn sidebar-close" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+          <!-- CATEGORY 1: MAIN WORKSPACE -->
+          <div class="sidebar-category-header">
+            <span class="sidebar-category-title">Main Workspace</span>
+          </div>
+
+          <a href="#" class="nav-item active" data-target="dashboard" data-nav-id="dashboard" title="Dashboard">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="3" width="8" height="5" rx="2" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="12" width="8" height="9" rx="2" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="15" width="8" height="6" rx="2" stroke="currentColor" stroke-width="1.7"/></svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" data-target="chat" data-nav-id="chat" title="AI Study Chat">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M21 12C21 16.4183 16.9706 20 12 20C10.4459 20 8.98366 19.6539 7.71001 19.0459L3 20L4.39289 16.0244C3.51852 14.8778 3 13.4948 3 12C3 7.58172 7.02944 4 12 4C16.9706 4 21 7.58172 21 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <span>AI Study Chat</span>
+          </a>
+
+          <!-- CATEGORY 2: STUDY TOOLS -->
+          <div class="sidebar-category-header">
+            <span class="sidebar-category-title">Study Tools</span>
+          </div>
+
+          <a href="#" class="nav-item" data-target="chat" data-nav-id="pdf-summarizer" data-prompt-suggest="Summarize my lecture notes into key points: " title="PDF Summarizer">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13H15M9 17H13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span>PDF Summarizer</span>
+          </a>
+
+          <!-- CATEGORY 3: ACADEMIC & PLANNING -->
+          <div class="sidebar-category-header">
+            <span class="sidebar-category-title">Academic &amp; Planning</span>
+          </div>
+
+          <a href="#" class="nav-item" data-target="calendar" data-nav-id="calendar" title="Planner & Focus">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 9H21" stroke="currentColor" stroke-width="1.7"/><path d="M8 3V6M16 3V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span>Planner &amp; Focus</span>
+          </a>
+          <a href="#" class="nav-item" data-target="courses" data-nav-id="courses" id="navCoursesLink" title="AKTU Courses">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 6C10 4.5 7 4 4 4.5V17.5C7 17 10 17.5 12 19C14 17.5 17 17 20 17.5V4.5C17 4 14 4.5 12 6Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 6V19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            <span>AKTU Courses</span>
+          </a>
+          <a href="#" class="nav-item" data-target="assignments" data-nav-id="assignments" id="navAssignmentsLink" title="Assignments">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 20.1046 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <rect x="9" y="3" width="6" height="4" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 17H15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            <span>Assignments</span>
+          </a>
+          <a href="#" class="nav-item" data-target="timetable" data-nav-id="timetable" id="navTimetableLink" title="Timetable">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/>
+              <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.7"/>
+              <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.7"/>
+              <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.7"/>
+              <line x1="12" y1="10" x2="12" y2="22" stroke="currentColor" stroke-width="1.7"/>
+            </svg>
+            <span>Timetable</span>
+          </a>
+          <a href="#" class="nav-item" data-target="tests-exams" data-nav-id="tests-exams" id="navTestsExamsLink" title="Tests & Exams">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M9 11L12 14L22 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 12V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <line x1="7" y1="17" x2="15" y2="17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <line x1="7" y1="13" x2="10" y2="13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            <span>Tests &amp; Exams</span>
+          </a>
+
+          <!-- CATEGORY 4: PREFERENCES -->
+          <div class="sidebar-category-header">
+            <span class="sidebar-category-title">Preferences</span>
+          </div>
+
+          <a href="#" class="nav-item" data-target="settings" data-nav-id="settings" title="Settings">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13.5C19.7 12.5 19.7 11.5 19.4 10.5L21 9L19.5 6.4L17.6 7.1C16.9 6.4 16 5.9 15.1 5.6L14.7 3.6H12.3H9.9L9.5 5.6C8.6 5.9 7.7 6.4 7 7.1L5.1 6.4L3.6 9L5.2 10.5C4.9 11.5 4.9 12.5 5.2 13.5L3.6 15L5.1 17.6L7 16.9C7.7 17.6 8.6 18.1 9.5 18.4L9.9 20.4H14.7L15.1 18.4C16 18.1 16.9 17.6 17.6 16.9L19.5 17.6L21 15L19.4 13.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-chip">
+            <div class="user-avatar" id="userAvatar">S</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameLabel">Student</span>
+              <span class="user-plan" id="userCourseLabel">B.Tech (AKTU CSE)</span>
+            </div>
+          </div>
+          <button class="nav-item logout-btn" id="logoutBtn" title="Log Out">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content Area with Top Navigation Bar -->
+    <div class="dashboard-main-area">
+
+      <!-- Top Navigation Bar -->
+      <header class="top-nav-bar" id="topNavBar">
+        <div class="top-nav-left">
+          <!-- Mobile sidebar toggle -->
+          <button id="mobileMenuBtn" class="icon-btn top-nav-toggle" aria-label="Toggle menu" title="Toggle Navigation Menu">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+
+          <!-- Search Bar -->
+          <div class="top-nav-search-wrap" id="topNavSearchWrap">
+            <div class="top-nav-search-box" id="topNavSearchBox">
+              <svg class="search-box-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search courses, notes, flashcards, or ask AI…" autocomplete="off" spellcheck="false" aria-label="Search study resources or ask AI" />
+              <span class="search-shortcut-hint" id="searchKbdHint" title="Press ⌘K or Ctrl+K to search">⌘K</span>
+              <button type="button" class="search-clear-btn hidden" id="searchClearBtn" aria-label="Clear search query" title="Clear search">&times;</button>
+            </div>
+
+            <!-- Live Search Results Dropdown -->
+            <div class="search-results-dropdown hidden" id="searchResultsDropdown" role="listbox" aria-label="Search suggestions">
+              <div class="search-results-inner" id="searchResultsInner">
+                <!-- Dynamically populated results -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="top-nav-right">
+          <!-- Theme Mode Toggle -->
+          <button type="button" class="icon-btn top-nav-icon-btn" id="themeToggleBtn" aria-label="Toggle theme mode" title="Toggle Light/Dark Theme">
+            <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <svg class="theme-icon-moon hidden" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <!-- Study Notifications Bell -->
+          <div class="top-nav-notif-wrap" id="topNavNotifWrap">
+            <button type="button" class="icon-btn top-nav-icon-btn notif-bell-btn" id="notifBellBtn" aria-label="Study Notifications" title="Study Notifications" aria-expanded="false" aria-haspopup="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21C13.55 21.3 13.3 21.56 13 21.73C12.7 21.9 12.36 22 12 22C11.64 22 11.3 21.9 11 21.73C10.7 21.56 10.45 21.3 10.27 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="notif-badge-count" id="notifBadgeCount">3</span>
+            </button>
+
+            <!-- Dropdown panel titled Study Notifications -->
+            <div class="notif-dropdown-panel hidden" id="notifDropdownPanel" role="region" aria-label="Study Notifications">
+              <div class="notif-panel-header">
+                <div class="notif-panel-title-group">
+                  <h4 class="notif-panel-title">Study Notifications</h4>
+                  <span class="notif-pill-count" id="notifPillCount">3 unread</span>
+                </div>
+                <button type="button" class="notif-mark-all-btn" id="notifMarkAllBtn">Mark all as read</button>
+              </div>
+              <div class="notif-list" id="notifList" role="list">
+                <!-- Dynamically populated real study notifications -->
+              </div>
+            </div>
+          </div>
+
+          <!-- User Profile Menu -->
+          <div class="top-nav-profile-wrap" id="topNavProfileWrap">
+            <button type="button" class="top-nav-profile-btn" id="topNavProfileBtn" title="Student Profile" aria-expanded="false" aria-haspopup="true">
+              <div class="top-nav-avatar" id="topNavAvatar">S</div>
+              <span class="top-nav-username" id="topNavUserName">Student</span>
+              <svg class="profile-chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+            <!-- Profile dropdown menu -->
+            <div class="profile-dropdown-menu hidden" id="profileDropdownMenu" role="menu">
+              <div class="profile-dropdown-header">
+                <div class="profile-dropdown-name" id="menuUserName">Student</div>
+                <div class="profile-dropdown-email" id="menuUserEmail">student@aktu.ac.in</div>
+                <span class="profile-dropdown-role">B.Tech (AKTU CSE)</span>
+              </div>
+              <div class="profile-dropdown-items">
+                <button type="button" class="profile-menu-item" data-nav-target="settings" role="menuitem">
+                  <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13.5C19.7 12.5 19.7 11.5 19.4 10.5L21 9L19.5 6.4L17.6 7.1C16.9 6.4 16 5.9 15.1 5.6L14.7 3.6H12.3H9.9L9.5 5.6C8.6 5.9 7.7 6.4 7 7.1L5.1 6.4L3.6 9L5.2 10.5C4.9 11.5 4.9 12.5 5.2 13.5L3.6 15L5.1 17.6L7 16.9C7.7 17.6 8.6 18.1 9.5 18.4L9.9 20.4H14.7L15.1 18.4C16 18.1 16.9 17.6 17.6 16.9L19.5 17.6L21 15L19.4 13.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                  <span>Account Settings</span>
+                </button>
+                <button type="button" class="profile-menu-item" data-nav-target="courses" role="menuitem">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M12 6C10 4.5 7 4 4 4.5V17.5C7 17 10 17.5 12 19C14 17.5 17 17 20 17.5V4.5C17 4 14 4.5 12 6Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 6V19" stroke="currentColor" stroke-width="1.7"/></svg>
+                  <span>My AKTU Courses</span>
+                </button>
+                <div class="profile-menu-divider"></div>
+                <button type="button" class="profile-menu-item text-danger" id="menuLogoutBtn" role="menuitem">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9" stroke="currentColor" stroke-width="1.7"/><path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.7"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.7"/></svg>
+                  <span>Log Out</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="main-content">
+
+      <!-- Dashboard View (Default) -->
+      <div id="dashboardView" class="view-panel">
+
+      <!-- Welcome section -->
+      <section class="welcome-section">
+        <div class="welcome-text">
+          <h1 id="welcomeHeading">Hi there!</h1>
+          <p>Here's your study snapshot for today. Let's keep the momentum going.</p>
+        </div>
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="summary-icon summary-icon-blue">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7H21V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="summary-data">
+              <span class="summary-value" id="progressLabel">0%</span>
+              <span class="summary-label">Overall Progress</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon summary-icon-orange">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 6 8.5 6 13.5C6 17.0899 8.68629 20 12 20C15.3137 20 18 17.0899 18 13.5C18 8.5 12 2 12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="summary-data">
+              <span class="summary-value" id="streakLabel">0</span>
+              <span class="summary-label">Day Streak</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon summary-icon-green">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 11L11.5 13.5L16 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/></svg>
+            </div>
+            <div class="summary-data">
+              <span class="summary-value" id="goalsDoneLabel">0/0</span>
+              <span class="summary-label">Today's Goals</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Study Assistant Landing / Companion Section (No embedded panels) -->
+      <section class="companion-section" id="companionSection">
+        <div class="companion-header">
+          <h2 class="companion-title">Your AI Study Companion</h2>
+          <p class="companion-subtitle">Everything you need for comprehensive learning, exam preparation, and academic productivity in one intelligent workspace.</p>
+        </div>
+
+        <div class="companion-grid">
+          <!-- 1. PDF Summarization -->
+          <div class="companion-card" id="cardPdfSummarization">
+            <div class="companion-card-top">
+              <div class="companion-icon-wrap companion-icon-blue">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13H15M9 17H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <span class="companion-badge">PDF TOOLS</span>
+            </div>
+            <h3 class="companion-card-title">PDF Summarization</h3>
+            <p class="companion-card-desc">Upload or provide study PDFs, lecture notes, and textbook chapters to receive concise, easy-to-understand summaries and key takeaways instantly.</p>
+            <button type="button" class="companion-card-action" data-nav-target="chat" data-prompt-suggest="Summarize my lecture notes into key points: ">
+              <span>Summarize Notes</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <!-- 2. AI Study Chat -->
+          <div class="companion-card" id="cardAiChat">
+            <div class="companion-card-top">
+              <div class="companion-icon-wrap companion-icon-purple">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M21 12C21 16.4183 16.9706 20 12 20C10.4459 20 8.98366 19.6539 7.71001 19.0459L3 20L4.39289 16.0244C3.51852 14.8778 3 13.4948 3 12C3 7.58172 7.02944 4 12 4C16.9706 4 21 7.58172 21 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="12" r="1.15" fill="currentColor"/><circle cx="12" cy="12" r="1.15" fill="currentColor"/><circle cx="15.5" cy="12" r="1.15" fill="currentColor"/></svg>
+              </div>
+              <span class="companion-badge">INTERACTIVE TUTOR</span>
+            </div>
+            <h3 class="companion-card-title">AI Study Chat</h3>
+            <p class="companion-card-desc">Ask study-related questions across your courses to get clear step-by-step explanations, formula derivations, concept breakdowns, and homework assistance.</p>
+            <button type="button" class="companion-card-action" data-nav-target="chat">
+              <span>Open AI Chat</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <!-- 3. Automated Timetable Generator -->
+          <div class="companion-card" id="cardTimetableGenerator">
+            <div class="companion-card-top">
+              <div class="companion-icon-wrap companion-icon-blue">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="10" x2="12" y2="22" stroke="currentColor" stroke-width="1.8"/></svg>
+              </div>
+              <span class="companion-badge">ACADEMIC SCHEDULE</span>
+            </div>
+            <h3 class="companion-card-title">Timetable Generator</h3>
+            <p class="companion-card-desc">View your section schedule, theoretical lectures, 4-period Technical Training, and laboratory sessions for Monday through Friday.</p>
+            <button type="button" class="companion-card-action" data-nav-target="timetable">
+              <span>Open Timetable</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <!-- 4. Calendar & Study Planning -->
+          <div class="companion-card" id="cardCalendarPlanning">
+            <div class="companion-card-top">
+              <div class="companion-icon-wrap companion-icon-indigo">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9H21" stroke="currentColor" stroke-width="1.8"/><path d="M8 3V6M16 3V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <span class="companion-badge">Schedule &amp; Focus</span>
+            </div>
+            <h3 class="companion-card-title">Calendar &amp; Study Planning</h3>
+            <p class="companion-card-desc">Organize your study schedule, manage upcoming assignment deadlines, track academic milestones, and run dedicated Pomodoro focus sessions.</p>
+            <button type="button" class="companion-card-action" data-nav-target="calendar">
+              <span>Open Schedule</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <!-- 5. Progress Tracker -->
+          <div class="companion-card" id="cardProgressTracker">
+            <div class="companion-card-top">
+              <div class="companion-icon-wrap companion-icon-green">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7H21V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span class="companion-badge">Analytics</span>
+            </div>
+            <h3 class="companion-card-title">Progress Tracker</h3>
+            <p class="companion-card-desc">Monitor your overall study progress, daily streak consistency, completed goal milestones, and topic comprehension history over time.</p>
+            <button type="button" class="companion-card-action" data-nav-target="calendar">
+              <span>View Progress</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <!-- 6. Courses / Subjects -->
+          <div class="companion-card" id="cardCoursesSubjects">
+            <div class="companion-card-top">
+              <div class="companion-icon-wrap companion-icon-amber">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 6C10 4.5 7 4 4 4.5V17.5C7 17 10 17.5 12 19C14 17.5 17 17 20 17.5V4.5C17 4 14 4.5 12 6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6V19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <span class="companion-badge">Curriculum</span>
+            </div>
+            <h3 class="companion-card-title">Courses / Subjects</h3>
+            <p class="companion-card-desc">Access official university curriculums, departmental syllabus units, prescribed textbooks, and organized subject study materials in one hub.</p>
+            <button type="button" class="companion-card-action" data-nav-target="courses">
+              <span>Explore Courses</span>
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Study Tip Banner -->
+        <div class="companion-banner">
+          <div class="companion-banner-content">
+            <div class="companion-banner-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="companion-banner-text">
+              <strong>Quick Study Tip</strong>
+              <span>Use the left sidebar navigation to open dedicated workspaces for AI Chat, Timetable, Planner & Focus, and AKTU Courses anytime, or tap the NOVA floating bubble in the bottom-right for instant questions.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      </div> <!-- End #dashboardView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: AI CHAT
+      ========================================================= -->
+      <div id="chatView" class="view-panel hidden">
+        <div class="page-header-row">
+          <div class="page-header-text">
+            <div class="page-title-badge">
+              <span class="badge-dot"></span>
+              <span>Interactive AI Tutor &amp; Multi-Chat Workspace</span>
+            </div>
+            <h1>AI Study Chat</h1>
+            <p>Ask for concept explanations, exam revision plans, and syllabus-tailored study schedules with persistent academic memory.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary btn-sm" id="newChatBtn" title="Start a fresh conversation">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>+ New Chat</span>
+            </button>
+            <button class="btn btn-ghost btn-sm" id="clearChatBtn" title="Clear current conversation messages">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86725 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Clear Chat</span>
+            </button>
+            <div class="chat-context-pill" id="chatContextPill" title="Active academic profile memory">
+              <span class="status-dot"></span>
+              <span id="chatContextPillText">AKTU • CSE • 2nd Year • Sem 3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Workspace with Sidebar & Main Chat -->
+        <div class="chat-workspace-container">
+          <!-- Chat History Sidebar -->
+          <aside class="chat-history-sidebar" id="chatHistorySidebar">
+            <div class="chat-history-top">
+              <div class="chat-history-title">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Saved Chats</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-new-chat" id="sidebarNewChatBtn" title="Create new chat">+ New</button>
+            </div>
+            
+            <div class="chat-conversations-list" id="conversationsList" role="list">
+              <!-- Dynamically populated conversations -->
+            </div>
+
+            <div class="chat-history-bottom">
+              <button type="button" class="btn btn-ghost btn-xs text-danger" id="clearAllChatsBtn" title="Clear all chat history">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="margin-right:4px;"><path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86725 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Clear All History</span>
+              </button>
+            </div>
+          </aside>
+
+          <!-- Dedicated Chat Card (Preserves #chat, #chatMessages, #chatInput, #summarizeBtn, #sendBtn) -->
+          <div class="dedicated-chat-card" id="chat">
+            <!-- Academic Memory Context Banner -->
+            <div class="chat-academic-banner" id="chatAcademicBanner">
+              <div class="chat-academic-info">
+                <span class="academic-badge-icon">🎓</span>
+                <div class="academic-badge-text">
+                  <strong>Active Academic Context:</strong>
+                  <span id="chatContextSummary">AKTU • CSE • 2nd Year • Semester 3</span>
+                </div>
+              </div>
+              <button type="button" class="btn btn-ghost btn-xs" id="chatEditProfileBtn" data-nav-target="settings">
+                Edit in Settings
+              </button>
+            </div>
+
+            <!-- Prompt suggestion chips -->
+            <div class="chat-prompts-bar" style="padding: 10px 18px 0;">
+              <span class="chat-prompts-label">Quick Prompts:</span>
+              <div class="chat-chips-scroll">
+                <button type="button" class="chat-chip-btn" data-prompt="I have my university semester exams in 10 days. Make me a comprehensive study plan tailored to my subjects and syllabus.">📅 10-Day Exam Plan</button>
+                <button type="button" class="chat-chip-btn" data-prompt="What are the high-yield topics and important questions for my current semester subjects?">🎯 High-Yield Topics</button>
+                <button type="button" class="chat-chip-btn" data-prompt="Summarize my lecture notes into concise revision points: ">📝 Summarize Notes</button>
+                <button type="button" class="chat-chip-btn" data-prompt="Explain this concept step-by-step with simple real-world examples: ">💡 Step-by-Step Breakdown</button>
+              </div>
+            </div>
+
+            <div class="chat-messages dedicated-chat-messages" id="chatMessages">
+              <div class="chat-msg chat-msg-ai">
+                <div class="chat-avatar chat-avatar-ai">AI</div>
+                <div class="chat-bubble"><p class="ai-study-p">Hi! I'm Nova, your AI study assistant. Ask me anything about your courses, or ask me to explain a concept.</p></div>
+              </div>
+            </div>
+
+            <!-- Attachment preview area (PDF or Image) -->
+            <div class="chat-attachment-preview-area hidden" id="chatAttachmentPreviewArea">
+              <div class="chat-attachment-chip" id="chatAttachmentChip">
+                <span class="attachment-chip-icon" id="attachmentChipIcon">📄</span>
+                <span class="attachment-chip-name" id="attachmentChipName">study-notes.pdf</span>
+                <span class="attachment-chip-meta" id="attachmentChipMeta"></span>
+                <button type="button" class="attachment-chip-remove" id="attachmentRemoveBtn" title="Remove attachment" aria-label="Remove attachment">&times;</button>
+              </div>
+            </div>
+
+            <div class="chat-input-row dedicated-chat-input-row">
+              <!-- Attachment Button & Dropdown Menu -->
+              <div class="chat-attachment-menu-wrap" id="chatAttachmentMenuWrap">
+                <button type="button" class="chat-attach-btn" id="chatAttachBtn" title="Add attachment (+)" aria-label="Attach study material" aria-haspopup="true" aria-expanded="false">+</button>
+
+                <!-- Hidden native file inputs -->
+                <input type="file" id="pdfFileInput" accept=".pdf,application/pdf" class="hidden" />
+                <input type="file" id="imageFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" />
+
+                <!-- Attachment popover menu -->
+                <div class="chat-attach-dropdown hidden" id="chatAttachDropdown" role="menu">
+                  <button type="button" class="attach-dropdown-item" id="attachPdfBtn" role="menuitem">
+                    <span>📄</span>
+                    <span>Upload PDF</span>
+                  </button>
+                  <button type="button" class="attach-dropdown-item" id="attachImageBtn" role="menuitem">
+                    <span>🖼️</span>
+                    <span>Upload Image</span>
+                  </button>
+                </div>
+              </div>
+
+              <textarea id="chatInput" class="chat-input" placeholder="Ask a question or paste notes to summarize…" rows="1"></textarea>
+              <div class="chat-actions">
+                <button class="btn btn-ghost btn-sm" id="summarizeBtn">Summarize</button>
+                <button class="btn btn-primary btn-sm" id="sendBtn">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- End #chatView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: FLASHCARDS
+      ========================================================= -->
+      <div id="flashcardsView" class="view-panel hidden">
+        <div class="page-header-row flashcard-page-header">
+          <div class="page-header-text">
+            <div class="page-title-badge">
+              <span class="badge-dot"></span>
+              <span>Active Recall</span>
+            </div>
+            <h1>AI Flashcards</h1>
+            <p>Active Recall • Review &amp; strengthen your memory</p>
+          </div>
+          <div class="page-header-actions">
+            <span class="card-counter-badge" id="cardCounter">1 / 5</span>
+          </div>
+        </div>
+
+        <div class="dedicated-flashcards-container" id="flashcards">
+          <!-- Top Section: Modern Compact Selectors & Study Progress -->
+          <div class="flashcard-deck-bar">
+            <div class="deck-selectors-wrap">
+              <div class="deck-select-group">
+                <label for="courseSelect" class="deck-select-label">Course / Programme</label>
+                <div class="custom-select-wrap">
+                  <select id="courseSelect" class="deck-select-input"></select>
+                  <svg class="select-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+              <div class="deck-select-group">
+                <label for="subjectSelect" class="deck-select-label">Subject</label>
+                <div class="custom-select-wrap">
+                  <select id="subjectSelect" class="deck-select-input"></select>
+                  <svg class="select-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clean Progress Indicator & Elegant Stats Bar -->
+            <div class="flashcard-progress-section">
+              <div class="fc-progress-meta-row">
+                <div class="fc-progress-counter-wrap">
+                  <span class="fc-progress-label">Session Progress</span>
+                  <span class="fc-progress-count" id="fcProgressText">Card 1 of 5</span>
+                </div>
+                <div class="fc-progress-stats">
+                  <div class="fc-stat-chip fc-stat-known" title="Cards marked as known">
+                    <span class="fc-stat-dot"></span>
+                    <span class="fc-stat-name">Known</span>
+                    <strong class="fc-stat-val" id="fcKnownCount">0</strong>
+                  </div>
+                  <div class="fc-stat-chip fc-stat-remaining" title="Cards remaining to review">
+                    <span class="fc-stat-dot fc-stat-dot-amber"></span>
+                    <span class="fc-stat-name">Remaining</span>
+                    <strong class="fc-stat-val" id="fcRemainingCount">5</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="fc-progress-bar-track" role="progressbar" aria-label="Deck study progress" aria-valuemin="0" aria-valuemax="100">
+                <div class="fc-progress-bar-fill" id="fcProgressFill" style="width: 20%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flashcard Stage (Centered, Proportional, Smooth 3D Flip) -->
+          <div class="dedicated-flashcard-stage">
+            <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Flashcard. Click or press space to flip">
+              <div class="flashcard-inner">
+                <!-- Front Face: Question -->
+                <div class="flashcard-face flashcard-front">
+                  <div class="flashcard-face-header">
+                    <span class="flashcard-tag flashcard-tag-question">Question</span>
+                    <span class="flashcard-flip-badge" title="Click anywhere to flip">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <span>Flip</span>
+                    </span>
+                  </div>
+                  <div class="flashcard-content-wrap">
+                    <p id="cardFront">Loading…</p>
+                  </div>
+                  <div class="flashcard-face-footer">
+                    <span class="flip-hint">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 15l-3 3m0 0l-3-3m3 3V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
+                      <span>Tap to reveal answer</span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Back Face: Answer -->
+                <div class="flashcard-face flashcard-back">
+                  <div class="flashcard-face-header">
+                    <span class="flashcard-tag flashcard-tag-answer">Answer</span>
+                    <span class="flashcard-flip-badge" title="Click to show question">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <span>Flip</span>
+                    </span>
+                  </div>
+                  <div class="flashcard-content-wrap">
+                    <p id="cardBack">Loading…</p>
+                  </div>
+                  <div class="flashcard-face-footer">
+                    <span class="flip-hint">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 9l3-3m0 0l3 3m-3-3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
+                      <span>Tap to show question</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Polished Control Bar: Previous, Mark Known (Primary), Shuffle, Next -->
+          <div class="dedicated-flashcard-controls">
+            <button class="fc-btn fc-btn-secondary fc-btn-prev" id="prevCardBtn" title="Previous card" aria-label="Previous card">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Prev</span>
+            </button>
+
+            <button class="fc-btn fc-btn-known" id="knownBtn" title="Mark card as known" aria-label="Mark card as known">
+              <svg class="fc-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="known-btn-label">Mark Known</span>
+            </button>
+
+            <button class="fc-btn fc-btn-secondary fc-btn-shuffle" id="shuffleCardBtn" title="Shuffle flashcard deck" aria-label="Shuffle deck">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 3H21V8M4 20L21 3M21 16V21H16M15 15L21 21M4 4L9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Shuffle</span>
+            </button>
+
+            <button class="fc-btn fc-btn-secondary fc-btn-next" id="nextCardBtn" title="Next card" aria-label="Next card">
+              <span>Next</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div> <!-- End #flashcardsView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: CALENDAR & FOCUS HUB
+      ========================================================= -->
+      <div id="calendarView" class="view-panel hidden">
+        <div class="page-header-row">
+          <div class="page-header-text">
+            <div class="page-title-badge">
+              <span class="badge-dot"></span>
+              <span>Schedule &amp; Planning</span>
+            </div>
+            <h1>Calendar &amp; Study Planning</h1>
+            <p>Manage your weekly study timeline, track topic milestones, and stay focused with the integrated Pomodoro timer.</p>
+          </div>
+        </div>
+
+        <div class="calendar-page-grid">
+          <!-- Calendar & Milestones (Preserves #calendar, #weekStrip, #topicList) -->
+          <div class="widget calendar-widget" id="calendar">
+            <div class="widget-header">
+              <div class="widget-title">
+                <svg class="widget-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 9H21" stroke="currentColor" stroke-width="1.7"/><path d="M8 3V6M16 3V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <h2>Study Timeline &amp; Tasks</h2>
+              </div>
+              <div class="calendar-week-nav">
+                <button type="button" class="btn-cal-nav" id="prevWeekBtn" title="Previous Week" aria-label="Previous Week">
+                  <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <span class="cal-month-label" id="calendarMonthLabel">September 2026</span>
+                <button type="button" class="btn-cal-nav" id="nextWeekBtn" title="Next Week" aria-label="Next Week">
+                  <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="btn-cal-today" id="todayWeekBtn">Today</button>
+              </div>
+            </div>
+
+            <div class="week-strip" id="weekStrip"></div>
+
+            <!-- =========================================================
+                 MY TASKS SECTION (Personal Student Tasks - Interactive)
+            ========================================================= -->
+            <div class="my-tasks-section" id="myTasksSection">
+              <div class="my-tasks-header">
+                <div class="my-tasks-title-group">
+                  <div class="my-tasks-title-row">
+                    <div class="my-tasks-heading-wrap">
+                      <svg class="section-icon" viewBox="0 0 24 24" fill="none"><path d="M9 11L12 14L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                      <h3>My Tasks</h3>
+                    </div>
+                    <span class="my-tasks-date-badge" id="selectedDateBadge">Today</span>
+                    <span class="my-tasks-count-pill" id="selectedDateTaskCount">0 tasks</span>
+                  </div>
+                  <p class="my-tasks-subtitle" id="selectedDateSubtitle">Day-wise study tasks, homework, and assignment checkpoints</p>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm add-task-btn" id="openAddTaskBtn">
+                  <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Add Task</span>
+                </button>
+              </div>
+
+              <!-- Task View Filters (All Added Tasks, Selected Day, Pending, Completed) -->
+              <div class="my-tasks-filter-bar" id="myTasksFilterBar" role="tablist" aria-label="Task view filter">
+                <button type="button" class="tasks-filter-btn is-active" data-task-filter="all" id="filterAllTasksBtn" role="tab" aria-selected="true">
+                  <span>All Added Tasks</span>
+                  <span class="filter-count-badge" id="allTasksCountBadge">0</span>
+                </button>
+                <button type="button" class="tasks-filter-btn" data-task-filter="selected" id="filterSelectedDayBtn" role="tab" aria-selected="false">
+                  <span id="selectedDayFilterLabel">Selected Day</span>
+                  <span class="filter-count-badge" id="selectedTasksCountBadge">0</span>
+                </button>
+                <button type="button" class="tasks-filter-btn" data-task-filter="pending" id="filterPendingTasksBtn" role="tab" aria-selected="false">
+                  <span>Pending</span>
+                  <span class="filter-count-badge" id="pendingTasksCountBadge">0</span>
+                </button>
+                <button type="button" class="tasks-filter-btn" data-task-filter="completed" id="filterCompletedTasksBtn" role="tab" aria-selected="false">
+                  <span>Completed</span>
+                  <span class="filter-count-badge" id="completedTasksCountBadge">0</span>
+                </button>
+              </div>
+
+              <!-- Day Tasks List -->
+              <ul class="my-tasks-list" id="myTasksList">
+                <!-- Injected dynamically via JS -->
+              </ul>
+
+              <!-- Day Tasks Empty State -->
+              <div class="my-tasks-empty hidden" id="myTasksEmpty">
+                <div class="empty-icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" width="26" height="26"><rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M9 10L11 12L15 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16H15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                </div>
+                <p class="empty-title" id="myTasksEmptyTitle">No tasks scheduled for this day</p>
+                <p class="empty-sub" id="myTasksEmptySub">Plan assignments, problem sets, or revision goals for this date.</p>
+                <div class="empty-actions" id="myTasksEmptyActions">
+                  <button type="button" class="btn btn-ghost btn-sm" id="emptyAddTaskBtn">+ Add a Task</button>
+                  <button type="button" class="btn btn-secondary btn-sm hidden" id="emptyShowAllTasksBtn">View All Added Tasks</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pomodoro Focus Hub (Preserves #focus, #timerRing, #timerDisplay, #timerToggleBtn, #timerBtnLabel, #timerResetBtn, #timerModeLabel) -->
+          <div class="widget timer-widget" id="focus">
+            <div class="widget-header">
+              <div class="widget-title">
+                <svg class="widget-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="1.7"/><path d="M12 9V13L15 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 2H15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <h2>AI Focus Hub</h2>
+              </div>
+              <span class="widget-sub" id="timerModeLabel">Focus session</span>
+            </div>
+
+            <div class="timer-stage">
+              <div class="timer-ring" id="timerRing">
+                <span class="timer-display" id="timerDisplay">25:00</span>
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <button class="btn btn-primary" id="timerToggleBtn">
+                <svg class="play-icon" viewBox="0 0 24 24" fill="none"><path d="M6 4L20 12L6 20V4Z" fill="currentColor"/></svg>
+                <svg class="pause-icon hidden" viewBox="0 0 24 24" fill="none"><rect x="5" y="4" width="5" height="16" rx="1" fill="currentColor"/><rect x="14" y="4" width="5" height="16" rx="1" fill="currentColor"/></svg>
+                <span id="timerBtnLabel">Start Focus</span>
+              </button>
+              <button class="btn btn-ghost" id="timerResetBtn">Reset</button>
+            </div>
+
+            <div class="focus-tips-card">
+              <h4>Pomodoro Technique</h4>
+              <p>25 minutes of concentrated study followed by a 5-minute break promotes sustained mental clarity and high retention.</p>
+            </div>
+          </div>
+        </div>
+      </div> <!-- End #calendarView -->
+
+      <!-- Hidden compatibility stubs for courses widget -->
+      <ul class="course-list hidden" id="courseList"></ul>
+      <button type="button" class="hidden" id="openAktuPortalBtn"></button>
+
+      <!-- =========================================================
+           AKTU COURSES & SUBJECTS PORTAL (Full Page View)
+           Dr. A.P.J. Abdul Kalam Technical University, Lucknow
+      ========================================================= -->
+      <div id="coursesView" class="view-panel hidden">
+        <div class="aktu-portal-page">
+          <!-- AKTU University Institutional Header Banner -->
+          <header class="aktu-univ-banner">
+            <div class="aktu-banner-inner">
+              <div class="aktu-identity">
+                <div class="aktu-crest-wrap" title="AKTU Official University Crest">
+                  <img src="assets/aktu-logo.png" alt="Dr. A.P.J. Abdul Kalam Technical University Official Logo" class="aktu-crest-img" id="aktuCrestLogo" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/en/9/98/Dr._A.P.J._Abdul_Kalam_Technical_University_logo.png';" />
+                </div>
+                <div class="aktu-titles">
+                  <div class="aktu-hindi-title">डॉ. ए. पी. जे. अब्दुल कलाम प्राविधिक विश्वविद्यालय, उत्तर प्रदेश, लखनऊ</div>
+                  <h1 class="aktu-eng-title">Dr. A.P.J. Abdul Kalam Technical University, Lucknow</h1>
+                  <div class="aktu-sub-title">State University of Government of Uttar Pradesh • AICTE & UGC Approved (Formerly UPTU)</div>
+                </div>
+              </div>
+              <div class="aktu-banner-actions">
+                <button type="button" class="aktu-btn-nav" id="backToDashboardBtn" title="Return to Dashboard">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span>Back to Dashboard</span>
+                </button>
+              </div>
+            </div>
+            <div class="aktu-sub-bar">
+              <div class="aktu-session-tag">
+                <span class="aktu-pulse-dot"></span>
+                <span>Session 2025–2026 • AICTE Model Curriculum (NEP-2020 & CBCS Scheme)</span>
+              </div>
+            </div>
+          </header>
+
+          <!-- Search & Filter Controls -->
+          <div class="aktu-filter-card">
+            <div class="aktu-prog-tabs" id="aktuProgTabs">
+              <button type="button" class="aktu-tab-btn active" data-filter="all">All Programmes</button>
+              <button type="button" class="aktu-tab-btn" data-filter="btech">B.Tech (Engineering)</button>
+              <button type="button" class="aktu-tab-btn" data-filter="mca">MCA</button>
+              <button type="button" class="aktu-tab-btn" data-filter="bpharm">B.Pharm</button>
+              <button type="button" class="aktu-tab-btn" data-filter="mba">MBA</button>
+              <button type="button" class="aktu-tab-btn" data-filter="bca">BCA</button>
+              <button type="button" class="aktu-tab-btn" data-filter="bba">BBA</button>
+              <button type="button" class="aktu-tab-btn" data-filter="mtech">M.Tech</button>
+            </div>
+
+            <div class="aktu-filter-controls">
+              <div class="aktu-search-box">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <input type="text" id="aktuSearchInput" placeholder="Search by subject code, title or keyword (e.g., BCS-301, Operating Systems, Data Structures, BP-101T)..." />
+              </div>
+              <select class="aktu-select-control" id="aktuBranchSelect">
+                <option value="all">All Branches / Disciplines</option>
+                <option value="cse">Computer Science & Engineering (CSE)</option>
+                <option value="it">Information Technology (IT)</option>
+                <option value="ece">Electronics & Communication (ECE)</option>
+                <option value="me">Mechanical Engineering (ME)</option>
+                <option value="ce">Civil Engineering (CE)</option>
+                <option value="pharm">Pharmacy</option>
+                <option value="mgmt">Management</option>
+                <option value="ca">Computer Applications</option>
+              </select>
+              <button type="button" class="btn-aktu-syllabus" id="resetAktuFiltersBtn">Reset Filters</button>
+            </div>
+
+            <div class="aktu-semester-strip" id="aktuSemesterStrip">
+              <span class="aktu-sem-label">Semester:</span>
+              <button type="button" class="aktu-sem-pill active" data-sem="all">All</button>
+              <button type="button" class="aktu-sem-pill" data-sem="1">Sem 1</button>
+              <button type="button" class="aktu-sem-pill" data-sem="2">Sem 2</button>
+              <button type="button" class="aktu-sem-pill" data-sem="3">Sem 3</button>
+              <button type="button" class="aktu-sem-pill" data-sem="4">Sem 4</button>
+              <button type="button" class="aktu-sem-pill" data-sem="5">Sem 5</button>
+              <button type="button" class="aktu-sem-pill" data-sem="6">Sem 6</button>
+              <button type="button" class="aktu-sem-pill" data-sem="7">Sem 7</button>
+              <button type="button" class="aktu-sem-pill" data-sem="8">Sem 8</button>
+            </div>
+          </div>
+
+          <!-- Programme Cards Container -->
+          <div class="aktu-programmes-list" id="aktuProgrammesContainer">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- AKTU Syllabus Detail Modal -->
+      <div class="aktu-modal-overlay hidden" id="aktuSyllabusModal">
+        <div class="aktu-modal-box">
+          <div class="aktu-modal-header">
+            <div class="aktu-modal-title-group">
+              <h3 id="aktuModalSubjectTitle">BCS-301: Data Structures</h3>
+              <div class="aktu-modal-sub" id="aktuModalSubjectSub">Dr. A.P.J. Abdul Kalam Technical University • Departmental Core</div>
+            </div>
+            <button type="button" class="aktu-modal-close" id="closeAktuModalBtn" title="Close">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="aktu-modal-body">
+            <div class="aktu-syllabus-meta-grid" id="aktuModalMetaGrid">
+              <!-- populated dynamically -->
+            </div>
+            <div class="aktu-units-container" id="aktuModalUnitsContainer">
+              <!-- 5 Units populated dynamically -->
+            </div>
+            <div class="aktu-books-section" id="aktuModalBooksSection">
+              <h4>Recommended Textbooks & Reference Materials (AKTU Prescribed):</h4>
+              <ul class="aktu-books-list" id="aktuModalBooksList">
+                <!-- books list -->
+              </ul>
+            </div>
+          </div>
+          <div class="aktu-modal-footer">
+            <span style="font-size:12px;color:var(--slate-500);">Aligned with AKTU Curriculum Scheme & Examination Ordinance</span>
+            <div class="aktu-modal-footer-actions">
+              <button type="button" class="btn-aktu-flashcards" id="modalPracticeCardsBtn">Practice Flashcards</button>
+              <button type="button" class="btn-aktu-ask-ai" id="modalAskAiBtn">Ask AI Assistant</button>
+              <button type="button" class="btn-aktu-syllabus" id="modalCloseBtn">Close</button>
+            </div>
+          </div>
+        </div>
+      </div> <!-- End #coursesView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: SETTINGS & PREFERENCES
+      ========================================================= -->
+      <div id="settingsView" class="view-panel hidden">
+        <div class="page-header-row">
+          <div class="page-header-text">
+            <div class="page-title-badge">
+              <span class="badge-dot"></span>
+              <span>Configuration</span>
+            </div>
+            <h1>Settings &amp; Preferences</h1>
+            <p>Manage your student profile, academic programme, and AI study assistant options.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <!-- Student Profile & Academic Context Card -->
+          <div class="settings-card" id="studentProfileSettingsCard">
+            <div class="settings-card-header">
+              <div class="settings-icon settings-icon-blue">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <h3>Student Profile &amp; Academic Details</h3>
+                <p>Saved persistently and used as active context for AI study planning</p>
+              </div>
+            </div>
+
+            <!-- Hidden compatibility labels for existing selectors -->
+            <span id="settingsUserName" class="hidden">Student</span>
+            <span id="settingsUserEmail" class="hidden">student@example.com</span>
+            <span id="settingsUserCourse" class="hidden">AKTU Programme</span>
+
+            <form class="profile-form" id="studentProfileForm" onsubmit="return false;">
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label class="profile-label" for="profileNameInput">Student Name</label>
+                  <input type="text" id="profileNameInput" class="profile-input" placeholder="e.g. Full Name" required>
+                </div>
+                <div class="profile-form-group">
+                  <label class="profile-label" for="profileEmailInput">Email Address</label>
+                  <input type="email" id="profileEmailInput" class="profile-input" disabled title="Account ID (unique to your login)">
+                </div>
+              </div>
+
+              <div class="profile-form-grid">
+                <div class="profile-form-group" id="profileProgramGroup">
+                  <label class="profile-label" for="profileProgramSelect">Program / Course</label>
+                  <select id="profileProgramSelect" class="profile-select">
+                    <!-- Dynamically populated from AKTU Central Configuration -->
+                  </select>
+                </div>
+                <div class="profile-form-group" id="profileBranchGroup">
+                  <label class="profile-label" for="profileBranchSelect">Branch / Specialization</label>
+                  <select id="profileBranchSelect" class="profile-select">
+                    <!-- Dynamically populated based on selected program -->
+                  </select>
+                  <input type="hidden" id="profileBranchInput" value="CSE">
+                </div>
+              </div>
+
+              <div class="profile-form-grid">
+                <div class="profile-form-group" id="profileYearGroup">
+                  <label class="profile-label" for="profileYearSelect">Academic Year</label>
+                  <select id="profileYearSelect" class="profile-select">
+                    <!-- Dynamically populated based on program duration -->
+                  </select>
+                </div>
+                <div class="profile-form-group" id="profileSemesterGroup">
+                  <label class="profile-label" for="profileSemesterSelect">Current Semester</label>
+                  <select id="profileSemesterSelect" class="profile-select">
+                    <!-- Dynamically populated based on program duration -->
+                  </select>
+                </div>
+              </div>
+
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label class="profile-label" for="profileUniversityInput">University</label>
+                  <input type="text" id="profileUniversityInput" class="profile-input" value="AKTU" placeholder="e.g. AKTU">
+                </div>
+                <div class="profile-form-group" style="display:flex;flex-direction:column;justify-content:flex-end;">
+                  <span class="profile-subjects-hint" id="programDurationBadge" style="margin-top:0;font-size:12.5px;color:var(--slate-500);line-height:1.4;">4-Year Degree Programme (8 Semesters)</span>
+                </div>
+              </div>
+
+              <div class="profile-form-group full-width">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                  <label class="profile-label" for="profileSubjectsInput">Current Semester Subjects</label>
+                  <button type="button" class="btn btn-ghost btn-xs" id="syncSyllabusSubjectsBtn" title="Auto-fill subjects from official AKTU syllabus for chosen semester">
+                    Sync from AKTU Syllabus
+                  </button>
+                </div>
+                <input type="text" id="profileSubjectsInput" class="profile-input" placeholder="e.g. Data Structures, Computer System Architecture, Discrete Structures & Theory of Logic, Technical Communication">
+                <span class="profile-subjects-hint">Comma-separated subjects. Nova AI uses these subjects to create customized 10-day exam timetables and topic priority lists.</span>
+              </div>
+
+              <div class="profile-actions-bar">
+                <button type="button" class="btn btn-primary" id="saveProfileBtn">
+                  Save / Update Profile
+                </button>
+                <div id="profileSaveFeedback" class="profile-feedback-alert hidden">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span>Profile &amp; AI Memory saved!</span>
+                </div>
+              </div>
+
+              <div class="profile-memory-banner">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <p><strong>Persistent AI Context Active:</strong> When you ask exam questions or request study schedules, Nova automatically incorporates your University, Branch, Year, Semester, and Subjects without asking repetitive background questions.</p>
+              </div>
+            </form>
+          </div>
+
+          <!-- Study Preferences Card -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-icon settings-icon-orange">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 6V12L16 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <h3>Study Preferences</h3>
+                <p>Tailor your daily study routine</p>
+              </div>
+            </div>
+            <div class="settings-fields-list">
+              <div class="settings-field-row">
+                <span class="settings-field-name">Focus Session Interval</span>
+                <span class="settings-field-val">25 Minutes (Pomodoro)</span>
+              </div>
+              <div class="settings-field-row">
+                <span class="settings-field-name">Daily Study Target</span>
+                <span class="settings-field-val">4 Goals / Day</span>
+              </div>
+              <div class="settings-field-row">
+                <span class="settings-field-name">Flashcard Recall Mode</span>
+                <span class="settings-field-val">Active Spaced Repetition</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Card -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-icon settings-icon-purple">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13.5C19.7 12.5 19.7 11.5 19.4 10.5L21 9L19.5 6.4L17.6 7.1C16.9 6.4 16 5.9 15.1 5.6L14.7 3.6H12.3H9.9L9.5 5.6C8.6 5.9 7.7 6.4 7 7.1L5.1 6.4L3.6 9L5.2 10.5C4.9 11.5 4.9 12.5 5.2 13.5L3.6 15L5.1 17.6L7 16.9C7.7 17.6 8.6 18.1 9.5 18.4L9.9 20.4H14.7L15.1 18.4C16 18.1 16.9 17.6 17.6 16.9L19.5 17.6L21 15L19.4 13.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <h3>Quick Navigation</h3>
+                <p>Switch between study tools</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px;">
+              <button type="button" class="btn btn-ghost btn-sm" data-nav-target="dashboard" style="justify-content:flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 3L21 12M5 10V20H19V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Back to Main Dashboard</span>
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" data-nav-target="courses" style="justify-content:flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 6C10 4.5 7 4 4 4.5V17.5C7 17 10 17.5 12 19C14 17.5 17 17 20 17.5V4.5C17 4 14 4.5 12 6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Explore AKTU Courses &amp; Syllabi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div> <!-- End #settingsView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: ASSIGNMENT TRACKER
+      ========================================================= -->
+      <div id="assignmentsView" class="view-panel hidden">
+        <div class="page-header-row">
+          <div class="page-header-text">
+            <div class="page-title-badge">
+              <span class="badge-dot"></span>
+              <span>Academic Workflow</span>
+            </div>
+            <h1>Assignment Tracker</h1>
+            <p>Track your university coursework and assignments with due date tracking, priority management, and completion status.</p>
+          </div>
+          <div class="asg-header-actions">
+            <!-- Google Classroom Authentication Controls -->
+            <div class="classroom-auth-box" id="classroomAuthBox">
+              <a href="/auth/google" class="btn btn-classroom-login" id="classroomLoginBtn" title="Sign in with Google Classroom">
+                <svg class="gc-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                </svg>
+                <span>Sign in with Google Classroom</span>
+              </a>
+              <button type="button" class="btn-gc-code" id="classroomManualCodeBtn" title="Paste authorization code or callback URL if redirected">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                <span>Paste Code</span>
+              </button>
+              <div class="classroom-connected-badge hidden" id="classroomConnectedBadge">
+                <svg class="gc-icon" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+                  <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                </svg>
+                <span class="gc-user-name" id="classroomUserName">Classroom Student</span>
+                <a href="/auth/logout" class="btn-gc-logout" id="classroomLogoutBtn" title="Disconnect Google Classroom">Logout</a>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="openAddAssignmentBtn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Add Assignment</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Notification Banner (Alerts / Notices) -->
+        <div class="asg-alert-banner hidden" id="asgAlertBanner">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="asgAlertMsg">Assignment notification</span>
+          <button type="button" class="asg-alert-close" id="asgAlertClose">&times;</button>
+        </div>
+
+        <!-- Summary KPI Cards -->
+        <div class="asg-metrics-grid">
+          <div class="asg-metric-card metric-total">
+            <div class="asg-metric-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 20.1046 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M9 12H15M9 16H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div class="asg-metric-content">
+              <span class="asg-metric-label">Total Assignments</span>
+              <div class="asg-metric-val" id="asgKpiTotal">0</div>
+              <span class="asg-metric-sub" id="asgKpiTotalSub">Manual &amp; Classroom items</span>
+            </div>
+          </div>
+
+          <div class="asg-metric-card metric-due-soon">
+            <div class="asg-metric-icon">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 6V12L15 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div class="asg-metric-content">
+              <span class="asg-metric-label">Pending</span>
+              <div class="asg-metric-val text-amber" id="asgKpiPending">0</div>
+              <span class="asg-metric-sub">In progress or awaiting submission</span>
+            </div>
+          </div>
+
+          <div class="asg-metric-card metric-overdue">
+            <div class="asg-metric-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="asg-metric-content">
+              <span class="asg-metric-label">Due</span>
+              <div class="asg-metric-val text-red" id="asgKpiOverdue">0</div>
+              <span class="asg-metric-sub">Past due date</span>
+            </div>
+          </div>
+
+          <div class="asg-metric-card metric-completed">
+            <div class="asg-metric-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12A10 10 0 1116.93 4.29" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="asg-metric-content">
+              <span class="asg-metric-label">Finished</span>
+              <div class="asg-metric-val text-green" id="asgKpiCompleted">0</div>
+              <span class="asg-metric-sub">Turned in / Completed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="asg-toolbar">
+          <div class="asg-filters-scroll">
+            <div class="asg-filter-tabs" role="tablist">
+              <button type="button" class="asg-tab active" data-filter="all">All <span class="asg-tab-badge" id="tabCountAll">0</span></button>
+              <button type="button" class="asg-tab" data-filter="pending">Pending <span class="asg-tab-badge" id="tabCountPending">0</span></button>
+              <button type="button" class="asg-tab" data-filter="due">Due <span class="asg-tab-badge" id="tabCountDue">0</span></button>
+              <button type="button" class="asg-tab" data-filter="finished">Finished <span class="asg-tab-badge" id="tabCountFinished">0</span></button>
+            </div>
+          </div>
+
+          <div class="asg-search-sort-row">
+            <div class="asg-search-wrap">
+              <svg class="asg-search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input type="text" id="asgSearchInput" class="asg-search-input" placeholder="Search by title, subject..." aria-label="Search assignments">
+              <button type="button" class="asg-search-clear hidden" id="asgSearchClear" aria-label="Clear search">&times;</button>
+            </div>
+            <div class="asg-sort-wrap">
+              <label for="asgSortSelect" class="asg-sort-label">Sort:</label>
+              <select id="asgSortSelect" class="asg-sort-select">
+                <option value="due-asc">Due Date (Earliest First)</option>
+                <option value="due-desc">Due Date (Latest First)</option>
+                <option value="priority">Priority (High to Low)</option>
+                <option value="title">Title (A to Z)</option>
+                <option value="created">Recently Added</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assignments List Container -->
+        <div class="asg-list-container">
+          <div class="asg-empty-state hidden" id="asgEmptyState">
+            <div class="asg-empty-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 20.1046 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M9 14L11 16L15 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 id="asgEmptyTitle">No assignments found</h3>
+            <p id="asgEmptySub">Create your first assignment to start tracking deadlines and coursework.</p>
+            <div class="asg-empty-actions">
+              <button type="button" class="btn btn-primary btn-sm" id="asgEmptyAddBtn">Add Assignment</button>
+            </div>
+          </div>
+
+          <ul class="asg-items-list" id="asgItemsList">
+            <!-- Dynamic assignment cards rendered by app.js -->
+          </ul>
+        </div>
+      </div> <!-- End #assignmentsView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: TIMETABLE MANAGEMENT
+           B.Tech CSE Year 2, Semester 3 (Sections CSE 2A - CSE 2D)
+      ========================================================= -->
+      <div id="timetableView" class="view-panel hidden">
+        <div id="timetable-module"></div>
+      </div> <!-- End #timetableView -->
+
+      <!-- =========================================================
+           DEDICATED FULL-SCREEN VIEW: TESTS & EXAMS PLANNER
+           AKTU PYQs, Unit Tests, Sessional/Mock Tests, Analytics, Exam Planner
+      ========================================================= -->
+      <div id="testsExamsView" class="view-panel hidden">
+        <div id="tests-planner-module"></div>
+      </div> <!-- End #testsExamsView -->
+    </main>
+    </div> <!-- End .dashboard-main-area -->
+  </div> <!-- End .dashboard-layout -->
+</div> <!-- End #dashboardScreen -->
+
+<!-- ============================================================
+     STAFF / FACULTY DASHBOARD SCREEN
+============================================================= -->
+<div id="staffDashboardScreen" class="screen dashboard-screen staff-screen hidden">
+  <div class="dashboard-layout">
+
+    <!-- Staff Sidebar -->
+    <aside class="sidebar staff-sidebar" id="staffSidebar">
+      <div class="sidebar-inner">
+        <div class="brand sidebar-brand">
+          <svg class="brand-logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="logoGradStaff" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4C7CFF"/>
+                <stop offset="100%" stop-color="#10B981"/>
+              </linearGradient>
+            </defs>
+            <path d="M24 4L42 14V34L24 44L6 34V14L24 4Z" stroke="url(#logoGradStaff)" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="24" cy="24" r="5" fill="url(#logoGradStaff)"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;">
+            <span class="brand-name">Nova</span>
+            <span class="staff-brand-badge" style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.04em;">Staff Portal</span>
+          </div>
+          <button id="closeStaffSidebarBtn" class="icon-btn sidebar-close" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav staff-sidebar-nav" aria-label="Staff Administration Menu">
+          <!-- Group 1: Academics & Schedule -->
+          <div class="sidebar-collapsible-group" data-group="academics">
+            <button type="button" class="sidebar-group-header-btn" aria-expanded="true" title="Toggle Academics group">
+              <span class="sidebar-category-title">Academics &amp; Schedule</span>
+              <svg class="sidebar-group-chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="sidebar-group-items">
+              <a href="#" class="nav-item staff-nav-item active" data-staff-target="dashboard" data-tt-tab="dashboard" title="Master Academic Overview">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M3 3H10V10H3V3ZM14 3H21V10H14V3ZM14 14H21V21H14V14ZM3 14H10V21H3V14Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Academic Overview</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="generator" data-tt-tab="generator" title="Timetable Generator">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Timetable Generator</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="editable-tt" data-tt-tab="editable-tt" title="Class & Schedule Editor">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Class &amp; Schedule Editor</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Group 2: Faculty & Allocations -->
+          <div class="sidebar-collapsible-group" data-group="faculty">
+            <button type="button" class="sidebar-group-header-btn" aria-expanded="true" title="Toggle Faculty & Allocations group">
+              <span class="sidebar-category-title">Faculty &amp; Allocations</span>
+              <svg class="sidebar-group-chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="sidebar-group-items">
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="faculty-mgmt" data-tt-tab="faculty-mgmt" title="Faculty & Teachers">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Faculty Members</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="section-mgmt" data-tt-tab="section-mgmt" title="Manage Sections (A–D)">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Manage Sections (A–D)</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="workload" data-tt-tab="workload" title="Teacher Workload Analytics">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.7"/><polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Teacher Workload</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="subject-config" data-tt-tab="subject-config" title="Subject Configuration">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Subjects &amp; Quotas</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="rooms-labs" data-tt-tab="rooms-labs" title="Classrooms & Laboratories">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="9" x2="15" y2="9" stroke="currentColor" stroke-width="1.7"/><line x1="12" y1="6" x2="12" y2="12" stroke="currentColor" stroke-width="1.7"/><line x1="9" y1="17" x2="15" y2="17" stroke="currentColor" stroke-width="1.7"/></svg>
+                <span>Rooms &amp; Facilities</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Group 3: Quality & Compliance -->
+          <div class="sidebar-collapsible-group" data-group="compliance">
+            <button type="button" class="sidebar-group-header-btn" aria-expanded="true" title="Toggle Quality & Settings group">
+              <span class="sidebar-category-title">Quality &amp; Settings</span>
+              <svg class="sidebar-group-chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="sidebar-group-items">
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="conflict-detection" data-tt-tab="conflict-detection" title="12 Rules Conflict Audit">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Conflict Audit (12 Rules)</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="reports-export" data-tt-tab="reports-export" title="Reports & Export">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Reports &amp; Analytics</span>
+              </a>
+              <a href="#" class="nav-item staff-nav-item" data-staff-target="settings" data-tt-tab="settings" title="Timetable Settings">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13.5C19.7 12.5 19.7 11.5 19.4 10.5L21 9L19.5 6.4L17.6 7.1C16.9 6.4 16 5.9 15.1 5.6L14.7 3.6H12.3H9.9L9.5 5.6C8.6 5.9 7.7 6.4 7 7.1L5.1 6.4L3.6 9L5.2 10.5C4.9 11.5 4.9 12.5 5.2 13.5L3.6 15L5.1 17.6L7 16.9C7.7 17.6 8.6 18.1 9.5 18.4L9.9 20.4H14.7L15.1 18.4C16 18.1 16.9 17.6 17.6 16.9L19.5 17.6L21 15L19.4 13.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span>Timetable Settings</span>
+              </a>
+            </div>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-chip staff-user-chip">
+            <div class="user-avatar staff-avatar" id="staffAvatar">F</div>
+            <div class="user-info">
+              <span class="user-name" id="staffNameLabel">Faculty Member</span>
+              <span class="user-plan" id="staffRoleBadge">Staff (Authorized)</span>
+            </div>
+          </div>
+          <button class="nav-item logout-btn" id="staffLogoutBtn" title="Log Out from Staff Portal">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="staffSidebarOverlay"></div>
+
+    <!-- Staff Main Content Area -->
+    <div class="dashboard-main-area staff-main-area">
+      <!-- Staff Top Navigation Bar -->
+      <header class="top-nav-bar staff-top-bar" id="staffTopNavBar">
+        <div class="top-nav-left">
+          <button id="mobileStaffMenuBtn" class="icon-btn top-nav-toggle" aria-label="Toggle menu">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+          <div class="staff-breadcrumb-nav">
+            <span class="staff-crumb-root">Staff Portal</span>
+            <span class="staff-crumb-sep">/</span>
+            <span class="staff-crumb-current" id="staffTopCrumb">Timetable Administration</span>
+          </div>
+        </div>
+
+        <div class="top-nav-center staff-top-center">
+          <div class="staff-system-status">
+            <span class="status-indicator-dot"></span>
+            <span class="status-indicator-text">AKTU B.Tech CSE · Fall 2025–2026 · Live Schedule Engine</span>
+          </div>
+        </div>
+
+        <div class="top-nav-right staff-top-right">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnSwitchToStudentPreview" title="Preview how students view their class timetable">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Preview Student View</span>
+          </button>
+          <div class="user-chip-mini" id="staffTopNavUserChip">
+            <div class="user-avatar-sm" id="staffTopAvatar">F</div>
+            <div class="user-info-sm">
+              <span class="user-name-sm" id="staffTopName">Faculty</span>
+              <span class="user-role-sm" id="staffTopRole">Staff</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Staff Workspace Main Container -->
+      <main class="dashboard-content" id="staffDashboardContent" style="padding: 24px;">
+        <div id="staff-timetable-module"></div>
+      </main>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     STUDY TASK MODAL (Add & Edit User Personal Tasks)
+============================================================= -->
+<div class="task-modal-overlay hidden" id="taskModalOverlay" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+  <div class="task-modal-box">
+    <div class="task-modal-header">
+      <div class="task-modal-title-group">
+        <div class="task-modal-badge">
+          <span class="badge-dot"></span>
+          <span>Study Planning</span>
+        </div>
+        <h3 id="taskModalTitle">Add New Study Task</h3>
+        <p class="task-modal-sub" id="taskModalSub">Set assignments, homework, and day-wise study goals</p>
+      </div>
+      <button type="button" class="task-modal-close" id="closeTaskModalBtn" aria-label="Close task modal">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <form id="taskForm" class="task-modal-body">
+      <input type="hidden" id="taskFormId" value="" />
+
+      <div class="task-form-group">
+        <label for="taskFormTitle">Task Title <span class="required-star">*</span></label>
+        <input type="text" id="taskFormTitle" class="task-input" required placeholder="e.g. Complete Linked List assignment" autocomplete="off" />
+      </div>
+
+      <div class="task-form-row">
+        <div class="task-form-group">
+          <label for="taskFormDate">Date <span class="required-star">*</span></label>
+          <input type="date" id="taskFormDate" class="task-input" required />
+        </div>
+        <div class="task-form-group">
+          <label for="taskFormTime">Time (Optional)</label>
+          <input type="time" id="taskFormTime" class="task-input" />
+        </div>
+      </div>
+
+      <div class="task-form-row">
+        <div class="task-form-group">
+          <label for="taskFormSubject">Subject / Category</label>
+          <input type="text" id="taskFormSubject" class="task-input" placeholder="e.g. Data Structures, Calculus" list="taskSubjectsDatalist" />
+          <datalist id="taskSubjectsDatalist">
+            <option value="Data Structures &amp; Algorithms"></option>
+            <option value="Computer Organization &amp; Architecture"></option>
+            <option value="Discrete Mathematics"></option>
+            <option value="Operating Systems"></option>
+            <option value="Database Management Systems"></option>
+            <option value="Calculus"></option>
+            <option value="General Studies"></option>
+          </datalist>
+        </div>
+        <div class="task-form-group">
+          <label for="taskFormPriority">Priority</label>
+          <select id="taskFormPriority" class="task-input task-select">
+            <option value="Medium">Medium Priority</option>
+            <option value="High">High Priority</option>
+            <option value="Low">Low Priority</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="task-form-group">
+        <label for="taskFormDescription">Description (Optional)</label>
+        <textarea id="taskFormDescription" class="task-input task-textarea" rows="3" placeholder="Add specific exercises, references, or preparation notes..."></textarea>
+      </div>
+
+      <div class="task-form-checkbox-row">
+        <label class="task-checkbox-label">
+          <input type="checkbox" id="taskFormCompleted" />
+          <span class="custom-checkbox-box">
+            <svg viewBox="0 0 24 24" fill="none" class="check-icon" width="14" height="14"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="checkbox-text">Mark task as completed</span>
+        </label>
+      </div>
+
+      <div class="task-modal-footer">
+        <button type="button" class="btn btn-ghost" id="cancelTaskModalBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveTaskBtn">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="saveTaskBtnText">Save Task</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     MANUAL ASSIGNMENT MODAL (Add & Edit)
+============================================================= -->
+<div class="task-modal-overlay hidden" id="asgModalOverlay" role="dialog" aria-modal="true" aria-labelledby="asgModalTitle">
+  <div class="task-modal-box">
+    <div class="task-modal-header">
+      <div class="task-modal-title-group">
+        <div class="task-modal-badge">
+          <span class="badge-dot"></span>
+          <span>Coursework Manager</span>
+        </div>
+        <h3 id="asgModalTitle">Add New Assignment</h3>
+        <p class="task-modal-sub" id="asgModalSub">Create a manual course assignment or revision project</p>
+      </div>
+      <button type="button" class="task-modal-close" id="closeAsgModalBtn" aria-label="Close assignment modal">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <form class="task-modal-body" id="asgForm" onsubmit="return false;">
+      <input type="hidden" id="asgEditId" value="" />
+
+      <div class="task-form-group">
+        <label for="asgFormTitle">Assignment Title <span class="required-star">*</span></label>
+        <input type="text" id="asgFormTitle" class="task-input" placeholder="e.g. Compiler Design Lab 4: Lexical Analyzer" required autocomplete="off" />
+        <span class="task-form-error hidden" id="asgTitleError" style="color:var(--danger);font-size:12px;margin-top:4px;">Please enter an assignment title.</span>
+      </div>
+
+      <div class="task-form-row">
+        <div class="task-form-group">
+          <label for="asgFormSubject">Subject / Course Name</label>
+          <input type="text" id="asgFormSubject" class="task-input" list="asgSubjectSuggestions" placeholder="e.g. Data Structures (BCS-301)" />
+          <datalist id="asgSubjectSuggestions"></datalist>
+        </div>
+        <div class="task-form-group">
+          <label for="asgFormPriority">Priority</label>
+          <select id="asgFormPriority" class="task-select">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="task-form-row">
+        <div class="task-form-group">
+          <label for="asgFormDueDate">Due Date</label>
+          <input type="date" id="asgFormDueDate" class="task-input" />
+        </div>
+        <div class="task-form-group">
+          <label for="asgFormDueTime">Due Time (Optional)</label>
+          <input type="time" id="asgFormDueTime" class="task-input" />
+        </div>
+      </div>
+
+      <div class="task-form-row">
+        <div class="task-form-group">
+          <label for="asgFormStatus">Status</label>
+          <select id="asgFormStatus" class="task-select">
+            <option value="Not Started" selected>Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        <div class="task-form-group">
+          <label for="asgFormPoints">Points / Maximum Marks (Optional)</label>
+          <input type="number" id="asgFormPoints" class="task-input" placeholder="e.g. 100" min="0" max="1000" />
+        </div>
+      </div>
+
+      <div class="task-form-group">
+        <label for="asgFormAttachment">Attachment or Reference Link (Optional)</label>
+        <input type="url" id="asgFormAttachment" class="task-input" placeholder="https://drive.google.com/... or https://github.com/..." />
+      </div>
+
+      <div class="task-form-group">
+        <label for="asgFormDesc">Description &amp; Instructions</label>
+        <textarea id="asgFormDesc" class="task-textarea" rows="3" placeholder="Notes, submission instructions, reference textbook pages, or problem set questions..."></textarea>
+      </div>
+
+      <div class="task-modal-footer">
+        <button type="button" class="btn btn-ghost" id="cancelAsgModalBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveAsgModalBtn">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="saveAsgBtnLabel">Save Assignment</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     DELETE ASSIGNMENT CONFIRMATION MODAL
+============================================================= -->
+<div class="task-modal-overlay hidden" id="asgDeleteModalOverlay" role="dialog" aria-modal="true" aria-labelledby="asgDeleteModalTitle">
+  <div class="task-modal-box" style="max-width: 440px;">
+    <div class="task-modal-header">
+      <div class="task-modal-title-group">
+        <h3 id="asgDeleteModalTitle">Delete Assignment</h3>
+        <p class="task-modal-sub">Are you sure you want to permanently delete this assignment?</p>
+      </div>
+      <button type="button" class="task-modal-close" id="closeAsgDeleteModalBtn" aria-label="Close modal">&times;</button>
+    </div>
+    <div style="padding: 18px 24px;">
+      <p style="font-size: 14px; color: var(--slate-700); font-weight: 500;" id="asgDeleteModalItemTitle">Assignment title</p>
+      <p style="font-size: 12.5px; color: var(--slate-500); margin-top: 6px;">This action cannot be undone.</p>
+    </div>
+    <div class="task-modal-footer">
+      <button type="button" class="btn btn-ghost" id="cancelAsgDeleteBtn">Cancel</button>
+      <button type="button" class="btn btn-primary" id="confirmAsgDeleteBtn" style="background: var(--danger); border-color: var(--danger);">Delete Assignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FLOATING NOVA CHATBOT (Always fixed in bottom-right viewport)
+============================================================= -->
+<button type="button" class="nova-fab" id="novaFab" aria-label="Open NOVA chat assistant">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12C21 16.4183 16.9706 20 12 20C10.4459 20 8.98366 19.6539 7.71001 19.0459L3 20L4.39289 16.0244C3.51852 14.8778 3 13.4948 3 12C3 7.58172 7.02944 4 12 4C16.9706 4 21 7.58172 21 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="12" r="1.15" fill="currentColor"/><circle cx="12" cy="12" r="1.15" fill="currentColor"/><circle cx="15.5" cy="12" r="1.15" fill="currentColor"/></svg>
+</button>
+
+<div class="nova-panel hidden" id="novaPanel" role="dialog" aria-label="NOVA AI Study Assistant chat">
+  <div class="nova-panel-header">
+    <div class="nova-panel-title">
+      <span class="nova-panel-avatar">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12C21 16.4183 16.9706 20 12 20C10.4459 20 8.98366 19.6539 7.71001 19.0459L3 20L4.39289 16.0244C3.51852 14.8778 3 13.4948 3 12C3 7.58172 7.02944 4 12 4C16.9706 4 21 7.58172 21 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nova-panel-heading">
+        <strong>NOVA</strong>
+        <small>AI Study Assistant</small>
+      </span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button type="button" class="nova-panel-close" id="novaPanelExpand" title="Open Full AI Chat Workspace" aria-label="Open Full AI Chat Workspace">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:14px;height:14px;"><path d="M15 3H21M21 3V9M21 3L10 14M9 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21H17C18.1046 21 19 20.1046 19 19V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="nova-panel-close" id="novaPanelClose" aria-label="Close NOVA chat">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="nova-panel-messages" id="novaPanelMessages">
+    <div class="chat-msg chat-msg-ai">
+      <div class="chat-avatar chat-avatar-ai">AI</div>
+      <div class="chat-bubble">Hi! I'm NOVA. Ask me anything about your studies or courses.</div>
+    </div>
+  </div>
+
+  <div class="nova-panel-input-row">
+    <textarea id="novaPanelInput" class="chat-input" placeholder="Message NOVA…" rows="1"></textarea>
+    <button class="btn btn-primary btn-icon" id="novaPanelSendBtn" type="button" aria-label="Send message">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4L14 20L11 13L4 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
+<!-- ============ END FLOATING NOVA CHATBOT ============ -->
+<script src="xlsx.full.min.js"></script>
+<script src="aktu-courses-data.js"></script>
+<script src="aktu-exams-data.js"></script>
+<script src="firebase-auth.bundle.js"></script>
+<script src="db.js"></script>
+<script src="courses.js"></script>
+<script src="app.js"></script>
+<script src="nova-fab.js"></script>
+<script src="Progress-api.js"></script>
+<script src="timetable.js"></script>
+<script src="tests-planner.js"></script>
+</body>
+</html>

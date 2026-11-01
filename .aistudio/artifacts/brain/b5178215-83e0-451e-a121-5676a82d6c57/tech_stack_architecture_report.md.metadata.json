@@ -1,0 +1,5 @@
+{
+  "summary": "Comprehensive technical architecture and tech stack manual for Nova AI Study Assistant. Details the vanilla ES6+ frontend, Express.js backend, Google Gemini 2.5 Flash integration, tiered multi-store persistence (MongoDB + Local JSON + IndexedDB), REST API specification, and provides direct links to the generated binary PDF.",
+  "updatedAt": "2026-10-16T04:42:20.323189129Z",
+  "userFacing": true
+}
